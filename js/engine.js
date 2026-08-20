@@ -73,19 +73,71 @@ function loadCurrentQuestion() {
 }
 
 /**
- * 4. Submit Answer & Grade
+ * Submit Answer & Show Instant Feedback Modal
  */
 function submitAnswer(topicName, levelName) {
     if (!userAns) return;
 
     const cleanInput = userAns.replace(/\s+/g, '').toLowerCase();
-    const currentValid = questions[currentQ].valid.map(v => v.toLowerCase());
+    const currentQData = questions[currentQ];
+    const currentValid = currentQData.valid.map(v => v.toLowerCase());
+    
+    const isCorrect = currentValid.includes(cleanInput);
+    if (isCorrect) score++;
 
-    if (currentValid.includes(cleanInput)) {
-        score++;
-        const scoreElem = document.getElementById("score-count");
-        if (scoreElem) scoreElem.innerText = score;
+    // Display Feedback Modal
+    showFeedbackModal(isCorrect, currentQData, topicName, levelName);
+}
+
+/**
+ * Render Instant Feedback Modal
+ */
+function showFeedbackModal(isCorrect, qData, topicName, levelName) {
+    let modal = document.getElementById("feedback-modal");
+    
+    // Create modal element dynamically if it doesn't exist
+    if (!modal) {
+        modal = document.createElement("div");
+        modal.id = "feedback-modal";
+        modal.className = "modal";
+        document.body.appendChild(modal);
     }
+
+    const titleColor = isCorrect ? "#16a34a" : "#dc2626";
+    const titleText = isCorrect ? "Correct! 🎉" : "Not Quite! ❌";
+
+    modal.innerHTML = `
+        <div class="modal-card" style="max-width: 480px; text-align: left;">
+            <h2 style="color: ${titleColor}; margin-top: 0;">${titleText}</h2>
+            
+            <p style="margin-bottom: 8px;"><b>Question:</b> ${qData.expr}</p>
+            <p style="margin-bottom: 8px;"><b>Your Answer:</b> <code>= ${userAns}</code></p>
+            
+            ${!isCorrect ? `<p style="color: #16a34a; margin-bottom: 12px;"><b>Correct Answer:</b> <code>${qData.valid[0]}</code></p>` : ''}
+            
+            <div style="background: #f8fafc; border-left: 4px solid ${titleColor}; padding: 12px; border-radius: 4px; margin: 16px 0; font-size: 0.95rem; line-height: 1.5;">
+                <b>Step-by-Step Logic:</b><br>
+                ${qData.explanation}
+            </div>
+
+            <button class="btn-start" onclick="nextQuestion('${topicName}', '${levelName}')">
+                ${currentQ + 1 < 10 ? 'Next Question →' : 'See Final Results'}
+            </button>
+        </div>
+    `;
+
+    modal.style.display = "flex";
+}
+
+/**
+ * Advance to Next Question
+ */
+function nextQuestion(topicName, levelName) {
+    const modal = document.getElementById("feedback-modal");
+    if (modal) modal.style.display = "none";
+
+    const scoreElem = document.getElementById("score-count");
+    if (scoreElem) scoreElem.innerText = score;
 
     currentQ++;
     if (currentQ < 10) {
