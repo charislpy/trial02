@@ -203,15 +203,13 @@
 <script src="js/engine.js"></script>
 
 <script>
- // Generator for x² ± bx + c (a = 1, c > 0)
+// Generator for x² ± bx + c (a = 1, c > 0) with strict perfect square rules
 function generateLevel01Questions() {
     const qList = [];
     for (let i = 0; i < 10; i++) {
-        // Pick positive magnitudes (1 to 9)
         const pMag = Math.floor(Math.random() * 9) + 1;
         const qMag = Math.floor(Math.random() * 9) + 1;
 
-        // Force both p and q to share the same sign so c is always positive
         const sign = Math.random() < 0.5 ? 1 : -1;
         const p = pMag * sign;
         const q = qMag * sign;
@@ -219,7 +217,6 @@ function generateLevel01Questions() {
         const b = p + q;
         const c = p * q;
 
-        // Format coefficient b (+ x, - x, + 5x, - 5x)
         let bStr = "";
         if (b === 1) bStr = "+ x";
         else if (b === -1) bStr = "- x";
@@ -233,21 +230,38 @@ function generateLevel01Questions() {
         const qStr = q > 0 ? `+${q}` : `${q}`;
         
         let valid = [];
+        let expText = "";
+
         if (p === q) {
-            // Handles perfect square cases like x² - 12x + 36
+            // Strictly require squared notation; (x+p)(x+p) is excluded
             valid = [
                 `(x${pStr})²`,
-                `(x${pStr})^2`,
-                `(x${pStr})(x${pStr})`
+                `(x${pStr})^2`
             ];
+            expText = `
+                1. Find two numbers that multiply to <b>+${c}</b> and add up to <b>${b}</b>.<br>
+                2. The numbers are <b>${p}</b> and <b>${q}</b>.<br>
+                3. Because both factors are identical, you <b>must write it as a perfect square</b>: <b>(x ${pStr})²</b>. (Writing (x ${pStr})(x ${pStr}) is unsimplified).
+            `;
         } else {
             valid = [
                 `(x${pStr})(x${qStr})`,
                 `(x${qStr})(x${pStr})`
             ];
+            expText = `
+                1. Find two numbers that multiply to <b>+${c}</b> and add up to <b>${b}</b>.<br>
+                2. The numbers are <b>${p}</b> and <b>${q}</b> because:<br>
+                   • (${p}) × (${q}) = +${c}<br>
+                   • (${p}) + (${q}) = ${b}<br>
+                3. Combine them into factored form: <b>(x ${pStr})(x ${qStr})</b>.
+            `;
         }
 
-        qList.push({ expr: expr, valid: valid });
+        qList.push({ 
+            expr: expr, 
+            valid: valid,
+            explanation: expText
+        });
     }
     return qList;
 }
