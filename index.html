@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Practice</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin: 0 0 0.5rem 0;
+            color: var(--text-main);
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .topic-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.75rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .topic-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #f1f5f9;
+            color: var(--text-main);
+        }
+
+        .level-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .level-btn {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            background-color: #f8fafc;
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .level-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .arrow-icon {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Math Practice</h1>
+        <p class="subtitle">Select a level to start your exercise.</p>
+    </header>
+
+    <main class="topic-grid">
+        
+        <!-- Topic 1: Factorization -->
+        <section class="topic-card">
+            <h2 class="topic-title">Factorization</h2>
+            <div class="level-list">
+                <a href="factorization-l1.html" class="level-btn">
+                    <span>Level 01</span>
+                    <span class="arrow-icon">→</span>
+                </a>
+                <a href="factorization-l2.html" class="level-btn">
+                    <span>Level 02</span>
+                    <span class="arrow-icon">→</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Topic 2: Law of Indices -->
+        <section class="topic-card">
+            <h2 class="topic-title">Law of Indices</h2>
+            <div class="level-list">
+                <a href="indices-l1.html" class="level-btn">
+                    <span>Level 01</span>
+                    <span class="arrow-icon">→</span>
+                </a>
+                <a href="indices-l2.html" class="level-btn">
+                    <span>Level 02</span>
+                    <span class="arrow-icon">→</span>
+                </a>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+</body>
+</html>
