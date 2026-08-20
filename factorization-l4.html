@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Factorization Level 04</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #0f172a;
+        }
+
+        * { box-sizing: border-box; touch-action: manipulation; }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 10px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            background: var(--card);
+            padding: 12px 20px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 10px;
+        }
+
+        .header-title { font-weight: 700; font-size: 1.1rem; color: var(--primary); }
+        .header-stats { display: flex; gap: 20px; font-weight: 600; }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        @media (max-width: 768px) {
+            .workspace { grid-template-columns: 1fr; overflow-y: auto; }
+        }
+
+        .panel {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .question-box { text-align: center; margin-bottom: 10px; }
+        .q-number { font-size: 0.9rem; color: #64748b; font-weight: 600; }
+        .expression { font-size: 2.2rem; font-weight: 700; margin: 10px 0; color: #1e293b; }
+
+        .answer-display {
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            min-height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        /* Touch Keypad */
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            flex-grow: 1;
+        }
+
+        .key {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .key:active { background: #cbd5e1; }
+        .key.action { background: #e2e8f0; font-size: 1rem; }
+        .key.submit { background: var(--primary); color: white; grid-column: span 2; font-size: 1.1rem; }
+
+        /* Scratchpad */
+        .rough-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .rough-title { font-weight: 600; color: #64748b; font-size: 0.95rem; }
+        .btn-clear { background: #fee2e2; color: #dc2626; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+
+        canvas { border: 2px dashed #cbd5e1; border-radius: 8px; background: #fff; flex-grow: 1; touch-action: none; width: 100%; height: 100%; }
+
+        /* Registration Modal */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            display: flex; justify-content: center; align-items: center; z-index: 100;
+        }
+
+        .modal-card { background: white; padding: 2rem; border-radius: 12px; width: 90%; max-width: 400px; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; }
+        .form-group input { width: 100%; padding: 10px; font-size: 1rem; border: 1px solid #cbd5e1; border-radius: 6px; }
+        .btn-start { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<!-- Registration Modal -->
+<div class="modal" id="start-modal">
+    <div class="modal-card">
+        <h2 style="margin-top:0;">Factorization (Level 04)</h2>
+        <p style="color:#64748b; font-size:0.88rem; margin-bottom: 1rem;">
+            <b>Scope:</b> Factorizing quadratics of the form <i>ax² ± bx + c</i>.
+        </p>
+        <div class="form-group"><label>Class</label><input type="text" id="student-class" placeholder="e.g. 3A"></div>
+        <div class="form-group"><label>Class No.</label><input type="text" id="student-no" placeholder="e.g. 12"></div>
+        <div class="form-group"><label>Name</label><input type="text" id="student-name" placeholder="e.g. Chan Tai Man"></div>
+        <button class="btn-start" onclick="initLevel()">Start Practice</button>
+    </div>
+</div>
+
+<!-- Header -->
+<header>
+    <div class="header-title">Factorization - Level 04</div>
+    <div class="header-stats">
+        <div>Question: <span id="q-count">1</span>/10</div>
+        <div>Score: <span id="score-count">0</span></div>
+    </div>
+</header>
+
+<!-- Main Workspace -->
+<div class="workspace">
+    <!-- Left Pane: Problem & Keypad -->
+    <div class="panel">
+        <div class="question-box">
+            <div class="q-number" id="q-label">Question 1</div>
+            <div class="expression" id="math-problem">2x² + 7x + 3</div>
+        </div>
+
+        <div class="answer-display" id="user-input">= </div>
+
+        <div class="keypad">
+            <div class="key" onclick="pressKey('(')">(</div>
+            <div class="key" onclick="pressKey(')')">)</div>
+            <div class="key" onclick="pressKey('x')">x</div>
+            <div class="key action" onclick="pressKey('DEL')">⌫</div>
+
+            <div class="key" onclick="pressKey('1')">1</div>
+            <div class="key" onclick="pressKey('2')">2</div>
+            <div class="key" onclick="pressKey('3')">3</div>
+            <div class="key" onclick="pressKey('+')">+</div>
+
+            <div class="key" onclick="pressKey('4')">4</div>
+            <div class="key" onclick="pressKey('5')">5</div>
+            <div class="key" onclick="pressKey('6')">6</div>
+            <div class="key" onclick="pressKey('-')">-</div>
+
+            <div class="key" onclick="pressKey('7')">7</div>
+            <div class="key" onclick="pressKey('8')">8</div>
+            <div class="key" onclick="pressKey('9')">9</div>
+            <div class="key action" onclick="pressKey('CLR')">Clear</div>
+
+            <div class="key" onclick="pressKey('0')">0</div>
+            <div class="key" onclick="pressKey('²')">x²</div>
+            <div class="key submit" onclick="submitAnswer('Factorization', 'Level 04')">Submit Answer</div>
+        </div>
+    </div>
+
+    <!-- Right Pane: Scratchpad Canvas -->
+    <div class="panel">
+        <div class="rough-header">
+            <div class="rough-title">Rough Work (Scratchpad)</div>
+            <button class="btn-clear" onclick="clearScratchpad('blank')">Clear Workings</button>
+        </div>
+        <canvas id="scratchpad"></canvas>
+    </div>
+</div>
+
+<!-- Connect Shared Engine -->
+<script src="js/engine.js"></script>
+
+<script>
+    // Greatest Common Divisor helper
+    function gcd(u, v) {
+        return u ? gcd(v % u, u) : v;
+    }
+
+    // Helper to format a factor string like (2x+1) or (x-3)
+    function formatFactor(m, p) {
+        const mStr = m === 1 ? "x" : `${m}x`;
+        const pStr = p > 0 ? `+${p}` : `${p}`;
+        return `${mStr}${pStr}`;
+    }
+
+    // Generator for ax² ± bx + c (a > 1, c > 0) with aligned cross-multiplication
+function generateLevel04Questions() {
+    const qList = [];
+    for (let i = 0; i < 10; i++) {
+        let m, n, p, q;
+
+        // Generate valid factors where a = m * n > 1 and c = p * q > 0
+        while (true) {
+            m = Math.floor(Math.random() * 4) + 1; // 1 to 4
+            n = Math.floor(Math.random() * 4) + 1; // 1 to 4
+
+            if (m * n === 1) continue; // Ensure a > 1
+
+            const pMag = Math.floor(Math.random() * 5) + 1; // 1 to 5
+            const qMag = Math.floor(Math.random() * 5) + 1; // 1 to 5
+
+            // Same sign for c > 0
+            const sign = Math.random() < 0.5 ? 1 : -1;
+            p = pMag * sign;
+            q = qMag * sign;
+
+            // Ensure factors are fully simplified
+            if (gcd(m, Math.abs(p)) === 1 && gcd(n, Math.abs(q)) === 1) {
+                break;
+            }
+        }
+
+        const a = m * n;
+        const b = m * q + n * p;
+        const c = p * q;
+
+        let bStr = "";
+        if (b === 1) bStr = "+ x";
+        else if (b === -1) bStr = "- x";
+        else if (b > 1) bStr = `+ ${b}x`;
+        else if (b < -1) bStr = `- ${Math.abs(b)}x`;
+
+        const cStr = `+ ${c}`;
+        const expr = `${a}x² ${bStr} ${cStr}`.replace(/\s+/g, ' ').trim();
+
+        const factor1 = formatFactor(m, p);
+        const factor2 = formatFactor(n, q);
+
+        // Cross-multiplication terms
+        const topRowResult = n * p; // (nx) * (p)
+        const bottomRowResult = m * q; // (mx) * (q)
+
+        let valid = [];
+        let expText = "";
+
+        if (m === n && p === q) {
+            valid = [
+                `(${factor1})²`,
+                `(${factor1})^2`
+            ];
+            expText = `
+                1. Use the Cross-Method for <b>${expr}</b>:<br>
+                   &nbsp;&nbsp;<b>${m}x</b> &nbsp;&nbsp;&nbsp;&nbsp; <b>${p > 0 ? '+' + p : p}</b> &nbsp;➔&nbsp; ${topRowResult}x<br>
+                   &nbsp;&nbsp;<b>${n}x</b> &nbsp;&nbsp;&nbsp;&nbsp; <b>${q > 0 ? '+' + q : q}</b> &nbsp;➔&nbsp; ${bottomRowResult}x<br>
+                2. Check sum: (${topRowResult}x) + (${bottomRowResult}x) = <b>${b > 0 ? '+' + b : b}x</b>.<br>
+                3. Since both factors are identical, express it as a perfect square: <b>(${factor1})²</b>.
+            `;
+        } else {
+            valid = [
+                `(${factor1})(${factor2})`,
+                `(${factor2})(${factor1})`
+            ];
+            expText = `
+                1. Use the Cross-Method for <b>${expr}</b>:<br>
+                   &nbsp;&nbsp;<b>${m}x</b> &nbsp;&nbsp;&nbsp;&nbsp; <b>${p > 0 ? '+' + p : p}</b> &nbsp;➔&nbsp; ${topRowResult}x<br>
+                   &nbsp;&nbsp;<b>${n}x</b> &nbsp;&nbsp;&nbsp;&nbsp; <b>${q > 0 ? '+' + q : q}</b> &nbsp;➔&nbsp; ${bottomRowResult}x<br>
+                2. Check sum: (${topRowResult}x) + (${bottomRowResult}x) = <b>${b > 0 ? '+' + b : b}x</b>.<br>
+                3. Combine horizontally to get: <b>(${factor1})(${factor2})</b>.
+            `;
+        }
+
+        qList.push({ 
+            expr: expr, 
+            valid: valid,
+            explanation: expText
+        });
+    }
+    return qList;
+}
+
+    function initLevel() {
+        const questionsList = generateLevel04Questions();
+        startExercise("Factorization", "Level 04", questionsList);
+    }
+</script>
+
+</body>
+</html>
