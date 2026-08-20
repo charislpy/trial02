@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math Practice</title>
+    <title>Math Exercise Portal</title>
     <style>
         :root {
             --primary: #4f46e5;
-            --primary-hover: #4338ca;
+            --primary-dark: #3730a3;
             --bg: #f8fafc;
             --card-bg: #ffffff;
             --text-main: #0f172a;
@@ -15,137 +15,180 @@
             --border: #e2e8f0;
         }
 
+        * { box-sizing: border-box; }
+
         body {
             font-family: system-ui, -apple-system, sans-serif;
             background-color: var(--bg);
             color: var(--text-main);
             margin: 0;
-            padding: 40px 20px;
+            padding: 24px 16px;
             min-height: 100vh;
-            box-sizing: border-box;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         header {
             text-align: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 32px;
         }
 
         h1 {
-            font-size: 2.5rem;
-            margin: 0 0 0.5rem 0;
-            color: var(--text-main);
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin: 0 0 8px 0;
         }
 
-        .subtitle {
+        p {
             color: var(--text-muted);
-            font-size: 1.1rem;
             margin: 0;
         }
 
-        .topic-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.5rem;
+        .container {
+            width: 100%;
+            max-width: 850px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
         }
 
         .topic-card {
             background: var(--card-bg);
-            border-radius: 16px;
-            padding: 1.75rem;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
             border: 1px solid var(--border);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
         .topic-title {
-            font-size: 1.5rem;
+            font-size: 1.35rem;
             font-weight: 700;
-            margin-top: 0;
-            margin-bottom: 1.25rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 2px solid #f1f5f9;
+            margin-bottom: 16px;
             color: var(--text-main);
+            border-bottom: 2px solid var(--bg);
+            padding-bottom: 10px;
         }
 
         .level-list {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            gap: 12px;
         }
 
-        .level-btn {
+        .level-item {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            background: #f1f5f9;
             padding: 14px 18px;
-            background-color: #f8fafc;
-            color: var(--text-main);
-            border: 1px solid var(--border);
             border-radius: 10px;
-            font-weight: 600;
-            font-size: 1rem;
-            text-decoration: none;
-            transition: all 0.2s ease;
+            gap: 16px;
         }
 
-        .level-btn:hover {
+        .level-info {
+            flex-grow: 1;
+        }
+
+        .level-header {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .level-desc {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .btn-start {
+            padding: 10px 20px;
             background-color: var(--primary);
             color: white;
-            border-color: var(--primary);
-            transform: translateY(-1px);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            transition: background-color 0.2s ease;
         }
 
-        .arrow-icon {
-            font-weight: bold;
+        .btn-start:hover {
+            background-color: var(--primary-dark);
+        }
+
+        @media (max-width: 500px) {
+            .level-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .btn-start {
+                width: 100%;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
     <header>
-        <h1>Math Practice</h1>
-        <p class="subtitle">Select a level to start your exercise.</p>
+        <h1>Math Exercise Portal</h1>
+        <p>Choose a level below to view details and start your practice.</p>
     </header>
 
-    <main class="topic-grid">
-        
+    <div class="container">
+
         <!-- Topic 1: Factorization -->
-        <section class="topic-card">
-            <h2 class="topic-title">Factorization</h2>
+        <div class="topic-card">
+            <div class="topic-title">1. Factorization</div>
             <div class="level-list">
-                <a href="factorization-l1.html" class="level-btn">
-                    <span>Level 01</span>
-                    <span class="arrow-icon">→</span>
-                </a>
-                <a href="factorization-l2.html" class="level-btn">
-                    <span>Level 02</span>
-                    <span class="arrow-icon">→</span>
-                </a>
-            </div>
-        </section>
+                
+                <div class="level-item">
+                    <div class="level-info">
+                        <div class="level-header">Level 01</div>
+                        <p class="level-desc">Factorizing quadratics of the form x² ± bx + c (where coefficient a = 1).</p>
+                    </div>
+                    <a href="factorization-l1.html" class="btn-start">Start Level 01</a>
+                </div>
 
-        <!-- Topic 2: Law of Indices -->
-        <section class="topic-card">
-            <h2 class="topic-title">Law of Indices</h2>
+                <div class="level-item">
+                    <div class="level-info">
+                        <div class="level-header">Level 02</div>
+                        <p class="level-desc">Factorizing quadratics of the form x² ± bx - c (where coefficient a = 1).</p>
+                    </div>
+                    <a href="factorization-l2.html" class="btn-start">Start Level 02</a>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Topic 2: Laws of Indices -->
+        <div class="topic-card">
+            <div class="topic-title">2. Laws of Indices</div>
             <div class="level-list">
-                <a href="indices-l1.html" class="level-btn">
-                    <span>Level 01</span>
-                    <span class="arrow-icon">→</span>
-                </a>
-                <a href="indices-l2.html" class="level-btn">
-                    <span>Level 02</span>
-                    <span class="arrow-icon">→</span>
-                </a>
-            </div>
-        </section>
+                
+                <div class="level-item">
+                    <div class="level-info">
+                        <div class="level-header">Level 01: Fundamental Rules</div>
+                        <p class="level-desc">Applying product (xᵃ × xᵇ), quotient (xᵃ ÷ xᵇ), and power ((xᵃ)ᵇ) rules.</p>
+                    </div>
+                    <a href="indices-l1.html" class="btn-start">Start Level 01</a>
+                </div>
 
-    </main>
-</div>
+                <div class="level-item">
+                    <div class="level-info">
+                        <div class="level-header">Level 02: Negative & Fractional Exponents</div>
+                        <p class="level-desc">Simplifying expressions involving negative powers (x⁻ᵃ) and roots (x¹/ⁿ).</p>
+                    </div>
+                    <a href="indices-l2.html" class="btn-start">Start Level 02</a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
 
 </body>
 </html>
